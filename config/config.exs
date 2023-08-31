@@ -10,6 +10,15 @@ import Config
 config :betting_system,
   ecto_repos: [BettingSystem.Repo]
 
+
+config :betting_system, BettingSystem.Repo,
+adapter: Ecto.Adapters.Postgres,
+username: "postgres",
+password: "postgres",
+database: "betting_system_dev",
+hostname: "localhost",
+pool_size: 10
+
 # Configures the endpoint
 config :betting_system, BettingSystemWeb.Endpoint,
   url: [host: "localhost"],
@@ -19,6 +28,14 @@ config :betting_system, BettingSystemWeb.Endpoint,
   ],
   pubsub_server: BettingSystem.PubSub,
   live_view: [signing_salt: "wS2yWi4M"]
+
+
+  #Configure Guardian library for Authentication
+  config :betting_system, BettingSystemWeb.Guardian,
+  secret_key: "XvWCiEw3VYDvmQjo6IdzQqiLJhvWK9SkIvaZRsheULe5erEcx2LXvE+DwsT0d/Xv",
+  serializer: BettingSystemWeb.UserSerializer,
+  ttl: { 30, :days }
+
 
 # Configures the mailer
 #
