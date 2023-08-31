@@ -1,0 +1,44 @@
+<.header>
+  Listing Users
+  <:actions>
+    <.link patch={~p"/users/new"}>
+      <.button>New Account management</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="users"
+  rows={@streams.users}
+  row_click={fn {_id, account_management} -> JS.navigate(~p"/users/#{account_management}") end}
+>
+  <:col :let={{_id, account_management}} label="First name"><%= account_management.first_name %></:col>
+  <:col :let={{_id, account_management}} label="Last name"><%= account_management.last_name %></:col>
+  <:col :let={{_id, account_management}} label="Email"><%= account_management.email %></:col>
+  <:col :let={{_id, account_management}} label="Msisdn"><%= account_management.msisdn %></:col>
+  <:action :let={{_id, account_management}}>
+    <div class="sr-only">
+      <.link navigate={~p"/users/#{account_management}"}>Show</.link>
+    </div>
+    <.link patch={~p"/users/#{account_management}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, account_management}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: account_management.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="account_management-modal" show on_cancel={JS.patch(~p"/users")}>
+  <.live_component
+    module={BettingSystemWeb.AccountManagementLive.FormComponent}
+    id={@account_management.id || :new}
+    title={@page_title}
+    action={@live_action}
+    account_management={@account_management}
+    patch={~p"/users"}
+  />
+</.modal>
