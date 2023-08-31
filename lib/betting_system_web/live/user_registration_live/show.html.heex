@@ -1,0 +1,29 @@
+<.header>
+  User registration <%= @user_registration.id %>
+  <:subtitle>This is a user_registration record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/users/#{@user_registration}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit user_registration</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="First name"><%= @user_registration.first_name %></:item>
+  <:item title="Last name"><%= @user_registration.last_name %></:item>
+  <:item title="Email"><%= @user_registration.email %></:item>
+  <:item title="Msisdn"><%= @user_registration.msisdn %></:item>
+</.list>
+
+<.back navigate={~p"/users"}>Back to users</.back>
+
+<.modal :if={@live_action == :edit} id="user_registration-modal" show on_cancel={JS.patch(~p"/users/#{@user_registration}")}>
+  <.live_component
+    module={BettingSystemWeb.UserRegistrationLive.FormComponent}
+    id={@user_registration.id}
+    title={@page_title}
+    action={@live_action}
+    user_registration={@user_registration}
+    patch={~p"/users/#{@user_registration}"}
+  />
+</.modal>

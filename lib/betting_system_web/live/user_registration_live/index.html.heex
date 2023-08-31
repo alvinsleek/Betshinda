@@ -1,0 +1,44 @@
+<.header>
+  Listing Users
+  <:actions>
+    <.link patch={~p"/users/new"}>
+      <.button>New User registration</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="users"
+  rows={@streams.users}
+  row_click={fn {_id, user_registration} -> JS.navigate(~p"/users/#{user_registration}") end}
+>
+  <:col :let={{_id, user_registration}} label="First name"><%= user_registration.first_name %></:col>
+  <:col :let={{_id, user_registration}} label="Last name"><%= user_registration.last_name %></:col>
+  <:col :let={{_id, user_registration}} label="Email"><%= user_registration.email %></:col>
+  <:col :let={{_id, user_registration}} label="Msisdn"><%= user_registration.msisdn %></:col>
+  <:action :let={{_id, user_registration}}>
+    <div class="sr-only">
+      <.link navigate={~p"/users/#{user_registration}"}>Show</.link>
+    </div>
+    <.link patch={~p"/users/#{user_registration}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, user_registration}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: user_registration.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="user_registration-modal" show on_cancel={JS.patch(~p"/users")}>
+  <.live_component
+    module={BettingSystemWeb.UserRegistrationLive.FormComponent}
+    id={@user_registration.id || :new}
+    title={@page_title}
+    action={@live_action}
+    user_registration={@user_registration}
+    patch={~p"/users"}
+  />
+</.modal>
