@@ -41,4 +41,19 @@ defmodule BettingSystemWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
+
+  #Routes
+  scope "/", BettingSystem.Web do
+    pipe_through :browser
+    #    resources("/users")
+    #    post("login", UserController, :create), name: "user/login"
+    #    get("/", PageController, :index)
+    #     get(
+    scope "/users" do
+      live("/user_registration", UserRegistrationLive)
+      live("/user_login", UserLoginSessionLive)
+      live("/account_management", AccountManagementLive)
+
+    end
+  end
 end
